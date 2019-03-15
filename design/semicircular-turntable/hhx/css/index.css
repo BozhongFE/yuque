@@ -1,0 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+.artboards {
+  position: relative;
+  width: 310px;
+  height: 162px;
+  margin: 0 auto;
+  background: url(../images/pink-artboard.png) no-repeat;
+  background-size: 100%;
+}
+.arc-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 310px;
+  height: 162px;
+  margin: 0 auto;
+  background: url(../images/arc.png) no-repeat;
+  background-size: 100%;
+}
+.artboards-data {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 8px;
+  text-align: center;
+  color: #fff;
+  line-height: 1;
+}
+.data--desc, .data--percentage {
+  font-size: 14px;
+}
+.data--detail {
+  padding: 5px 0;
+}
+.data--number {
+  font-size: 32px;
+}
+.arrow__icon {
+  position: absolute;
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: url(../images/arrow.png) no-repeat;
+  background-size: 100%;
+}
+
+.cycle__list {
+  position: absolute;
+  width: 310px;
+  height: 162px;
+  transition: all 1s ease;
+  transform-origin: center 0;
+}
+.cycle__item {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 155px;
+  height: 155px;
+  transform-origin: center top;
+}
+.cycle__item.active .cycle__text{
+  color: #ff668c;
+}
+.cycle__text {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #ffb3c6;
+  line-height: 1;
+}
+.cycle__title {
+  font-size: 14px;
+}
+.cycle__value {
+  padding-top: 6px;
+  font-size: 18px;
+}
