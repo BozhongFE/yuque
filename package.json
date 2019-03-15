@@ -1,0 +1,22 @@
+{
+  "name": "yuque",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BozhongFE/yuque.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BozhongFE/yuque/issues"
+  },
+  "homepage": "https://github.com/BozhongFE/yuque#readme",
+  "devDependencies": {
+    "express": "^4.16.4"
+  }
+}
