@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>半圆形转盘</title>
+  <style>
+    html, body {
+      height: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    body, ul, p {
+      padding: 0;
+      margin: 0;
+    }
+    p, span {
+      line-height: 1.2;
+    }
+    li {
+      list-style: none;
+    }
+    #turn-table {
+      width: 100%;
+    }
+    /* --- 转盘背景样式 --- */
+    .turntable-circle {
+      position: relative;
+      width: 310px;
+      height: 162px;
+      margin: 0 auto;
+      font-size: 14px;
+      background: url('https://cdn.nlark.com/yuque/0/2019/png/234062/1551948801216-assets/web-upload/45ef9c79-103d-4885-b15d-04309d826b92.png') no-repeat center top;
+      background-size: 100% 100%;
+    }
+    .turntable-circle:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://cdn.nlark.com/yuque/0/2019/png/234062/1551948801249-assets/web-upload/555b21dd-ef94-40d7-802a-382990ee30c4.png') no-repeat center top;
+      background-size: 100% 100%;
+    }
+    /* --- 转盘中心内容 --- */
+    .circle-center {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 10px;
+      color: #fff;
+      text-align: center;
+      box-sizing: border-box;
+      /* 会被周边内容覆盖，假设有链接跳转需提高层级 */
+      z-index: 10;
+    }
+    .circle-center:after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -4px;
+      transform: translate(100%, -50%);
+      width: 16px;
+      height: 16px;
+      background-image: url('https://cdn.nlark.com/yuque/0/2019/png/234062/1551948801182-assets/web-upload/4c90adfe-8e77-4c7d-9b32-203ff119134d.png');
+      background-size: 100% 100%;
+    }
+    .circle-center__num {
+      display: inline-block;
+      /* 底间距为了贴近设计图额外加2px */
+      margin: 5px 0 2px;
+      font-size: 32px;
+      line-height: 1;
+    }
+    /* --- 转盘周边内容 --- */
+    .circle-list {
+      height: 162px;
+      /* 圆心做旋转点 */
+      transform-origin: center 8px;
+    }
+    /* 初始位置居中置底 */
+    .circle-item {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 50%;
+      /* 162 - 8 */
+      height: 154px;
+      margin-left: -25%;
+      transform-origin: center top;
+      color: #FFB3C6;
+    }
+    .circle-item.active {
+      color: #FF668C;
+    }
+    /* 按顺序旋转元素 */
+    .circle-item:nth-child(2) {
+      transform: rotate(-60deg)
+    }
+    .circle-item:nth-child(3) {
+      transform: rotate(-120deg)
+    }
+    .circle-item:nth-child(4) {
+      transform: rotate(-180deg)
+    }
+    .circle-item:nth-child(5) {
+      transform: rotate(-240deg)
+    }
+    .circle-item:nth-child(6) {
+      transform: rotate(-300deg)
+    }
+    /* 内容置底 */
+    .circle-item__text {
+      position: absolute;
+      /* 110 - 8 */
+      top: 102px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .circle-item__day {
+      display: block;
+      margin-top: 6px;
+      font-size: 18px;
+    }
+    /* --- 屏幕宽于620px，转盘放大一倍 --- */
+    @media screen and (min-width: 620px) {
+      .turntable-circle {
+        transform-origin: center top;
+        transform: scale(2, 2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="turntable" style="display: none" v-show="show">
+    <article class="turntable-circle">
+      <!-- 中心内容 -->
+      <section class="circle-center">
+        <p class="circle-center__value">好孕率<br /><span class="circle-center__num">{{list[currentIndex].haoyun}}</span>%</p>
+        <p class="circle-center__type">{{statusText[list[currentIndex].status]}}</p>
+      </section>
+      <!-- 周边内容 -->
+      <ul class="circle-list" 
+        :style="`transform: rotate(${circleDeg}deg)`"
+        @touchstart="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend="onTouchEnd">
+        <li class="circle-item"
+          :class="{'active': index === currentIndex}"
+          :key="item.period_days"
+          v-for="(item, index) in list">
+          <p class="circle-item__text">周期<span class="circle-item__day">第{{item.period_days}}天</span></p>
+        </li>
+      </ul>
+      <br/><br/>
+      <p>扩展部分未完成，请无视</p>
+    </article>
+  </main>
+  <script src="https://scdn.bozhong.com/source/common/js/vue/2.3.0/vue.min.js"></script>
+  <script>
+    // 模拟数据
+    const dataset = [
+      {
+        haoyun: 10, //int  好孕率，单位%
+        status: 1, //int  状态 1月经期 2排卵期 3安全期
+        period_days: 1, //int  周期第几天
+      },
+      {
+        haoyun: 30, //int  好孕率，单位%
+        status: 2, //int  状态 1月经期 2排卵期 3安全期
+        period_days: 2, //int  周期第几天
+      },
+      {
+        haoyun: 40, //int  好孕率，单位%
+        status: 3, //int  状态 1月经期 2排卵期 3安全期
+        period_days: 3, //int  周期第几天
+      },
+      {
+        haoyun: 80, //int  好孕率，单位%
+        status: 1, //int  状态 1月经期 2排卵期 3安全期
+        period_days: 4, //int  周期第几天
+      },
+      {
+        haoyun: 30, //int  好孕率，单位%
+        status: 2, //int  状态 1月经期 2排卵期 3安全期
+        period_days: 5, //int  周期第几天
+      },
+      {
+        haoyun: 20, //int  好孕率，单位%
+        status: 3, //int  状态 1月经期 2排卵期 3安全期
+        period_days: 6, //int  周期第几天
+      },
+    ];
+    
+    new Vue({
+      el: '#turntable',
+      data: {
+        // 状态对应文案
+        statusText: [null, '月经期', '排卵期', '安全期'],
+        // 数据
+        list: dataset,
+        // 转盘当前项下标
+        currentIndex: 0,
+        // 圆旋转角度
+        circleDeg: 0,
+        // 旋转时需要记录的数据
+        touch: {
+          // 用户触摸时初始位置
+          startY: 0,
+          startX: 0,
+        },
+        // 延时事件，用于防抖
+        setTimoutFn: null,
+        // 页面准备好后显示
+        show: false,
+      },
+      watch: {
+        // 根据旋转角度计算当前项下标
+        circleDeg: {
+          handler(v, old) {
+            const self = this;
+            const { currentIndex, list: { length }, setTimeoutFn } = this;
+            // 防抖处理
+            if (setTimeoutFn) window.clearTimeout(setTimeoutFn);
+            const dIndex = Math.floor(v / 60) % length;
+            const newIndex = currentIndex + dIndex;
+            self.setTimeoutFn = setTimeout(() => {
+              self.currentIndex = newIndex < 0 ? length + newIndex : (newIndex > length - 1 ? newIndex - length + 1 : newIndex);
+            }, 50)
+          }
+        },
+      },
+      methods: {
+        // 用户开始触摸转盘
+        onTouchStart(e) {
+          const { touch } = this;
+
+          // 获取触摸点坐标并存储
+          const changedTouch = e.changedTouches[0];
+          touch.startX = changedTouch.pageX;
+          touch.startY = changedTouch.pageY;
+        },
+        // 用户触摸转盘中
+        onTouchMove(e) {
+          const { touch: { startX, startY } } = this;
+          // 当前触摸点位置
+          const { pageX, pageY} = e.changedTouches[0];
+          // 若触摸点垂直位移大于横向位移不执行旋转
+          const dDis = Math.abs(pageY - startY) - Math.abs(pageX - startX);
+          if (dDis > 0) return false;
+
+          // 禁止默认事件
+          e.preventDefault();
+          // 计算要旋转的角度, 以移动量/20的比例
+          const xDis = pageX - startX;
+
+          this.circleDeg -= xDis / 20;
+          // return self.countHandler(xDis / 20);
+        },
+        // 用户停止触摸转盘
+        onTouchEnd(e) {
+          const { circleDeg, touch: { startX } } = this;
+          // 结束时摆正转盘
+          const n = Math.abs(circleDeg % 60);
+          const xDis = e.changedTouches[0].pageX - startX;
+          // 根据方向计算
+          this.circleDeg = xDis > 0? circleDeg - (60 - n) : circleDeg + (60 - n);
+        },
+        // 计算新的角度及当前项下标
+        // countHandler(dDeg) {
+        //   const {}
+        // }
+      },
+      mounted() {
+        this.show = true;
+      },
+    })
+  </script>
+</body>
+</html>
