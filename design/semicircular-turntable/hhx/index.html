@@ -1,12 +1,126 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>vue</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>语雀-半圆转盘</title>
+  <link rel="stylesheet" href="./css/index.css">
+  <script src="https://cdn.bootcss.com/vue/2.6.8/vue.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <section
+      class="artboards"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd">
+      <section class="arc-bg"></section>
+      <section class="artboards-data">
+        <p class="data--desc">好孕率</p>
+        <p class="data--detail">
+          <span class="data--number">{{ curArtboardData.haoyun }}</span>
+          <span class="data--percentage">%</span>
+        </p>
+        <p class="data--desc">黄体期</p>
+        <i class="arrow__icon"></i>
+      </section>
+      <ul
+        class="cycle__list"
+        :style="{transform: `rotate(${rotateDeg}deg)`}">
+        <li
+          v-for="(item, index) in artboardDatas"
+          :key="index"
+          :class="['cycle__item', {'active': curIndex === index}]"
+          :style="{transform: `translateX(-50%) rotate(${(6 - index) * 60}deg)`}">
+          <section class="cycle__text">
+            <p class="cycle__title">周期</p>
+            <p class="cycle__value">第{{ item.period_days }}天</p>
+          </section>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    let startX = 0;
+    let endX = 0;
+    const leftSymbol = Symbol("left");
+    const rightSymbol = Symbol("right");
+
+  const vm = new Vue({
+    el: '#app',
+    data: {
+      artboardDatas: [
+        {
+          haoyun: 1,
+          status: 1,
+          period_days: 1
+        },
+        {
+          haoyun: 2,
+          status: 1,
+          period_days: 2
+        },
+        {
+          haoyun: 3,
+          status: 1,
+          period_days: 3
+        },
+        {
+          haoyun: 4,
+          status: 1,
+          period_days: 4
+        },
+        {
+          haoyun: 5,
+          status: 1,
+          period_days: 5
+        },
+        {
+          haoyun: 6,
+          status: 1,
+          period_days: 6
+        }
+      ],
+      curIndex: 0,
+      rotateDeg: 0
+    },
+    computed: {
+      curArtboardData() {
+        return this.artboardDatas[this.curIndex]
+      }
+    },
+    methods: {
+      onTouchStart(event) {
+        startX = event.changedTouches[0].clientX;
+      },
+      onTouchMove(event) {},
+      onTouchEnd(event) {
+        const dataLength = this.artboardDatas.length;
+        if (dataLength <= 1) return false;
+        endX = event.changedTouches[0].clientX;
+        const position = this.getPosition();
+        const rotateDeg = this.rotateDeg;
+        // 2条时只能左右转动
+        const isNotTouchLeft =
+          dataLength === 2 &&
+          dataLength === this.curIndex + 1 &&
+          position === leftSymbol;
+        const isNotTouchRight =
+          dataLength === 2 && this.curIndex === 0 && position === rightSymbol;
+        if (isNotTouchLeft || isNotTouchRight) return false;
+
+        this.rotateDeg =
+          position === leftSymbol ? rotateDeg + 60 : rotateDeg - 60;
+        const addDegNum = this.rotateDeg >= 0 ? 0 : 360;
+        this.curIndex = ((this.rotateDeg % 360) + addDegNum) / 60;
+      },
+      getPosition() {
+        return startX > endX ? leftSymbol : rightSymbol;
+      }
+    }
+  })
+  </script>
+</body>
 </html>
