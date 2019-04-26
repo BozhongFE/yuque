@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title></title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      ul {
+        list-style: none;
+      }
+      body {
+        box-sizing: border-box;
+        padding-left: 0.8rem;
+        padding-right: 1.1rem;
+      }
+      div {
+        box-sizing: border-box;
+      }
+      .box {
+        height: 49.75rem;
+        background-color: #fff;
+      }
+      .box__one {
+        /* width: 678px; */
+        height: 15.95rem;
+        position: relative;
+      }
+      .box__one .box__one--top {
+        width: 16.95rem;
+        height: 7.2rem;
+        position: relative;
+        margin-bottom: 0.625rem;
+      }
+      .box__one .box__one--bottom {
+        margin-left: 2.25rem;
+      }
+      .box__one .box__one--bottom img {
+        width: 15rem;
+        max-height: 6.25rem;
+        border-radius: 10px;
+      }
+      .box__one .box__one--bottom span {
+        width: 5.825rem;
+        height: 0.575rem;
+        color: #999;
+        font-size: 0.6rem;
+      }
+      img {
+        vertical-align: top;
+        width: 100%;
+        height: 100%;
+      }
+      /* 用户头像 */
+      .box__one .box__one--top .one-top--photo {
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 50%;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        overflow: hidden;
+        margin-right: 8px;
+      }
+      .one-top--user {
+        position: relative;
+        height: 2.2rem;
+        margin-top: 0.8rem;
+      }
+      /* 文案标题 */
+      .box__one .box__one--top .one-top--title {
+        font-size: 0.8rem;
+        color: #333;
+        position: absolute;
+        top: 50%;
+        left: 2.4rem;
+        transform: translate(0, -50%);
+      }
+      /* 文案内容 */
+      .box__one .box__one--top .one-top--text {
+        width: 14.7rem;
+        height: 4.4rem;
+        font-size: 0.7rem;
+        float: right;
+        text-align: left;
+        line-height: 1.05rem;
+        color: #666;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+      }
+
+      /* 第二个盒子 */
+      .box__two {
+        width: 18.75rem;
+        height: 12.8rem;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+      .box__two .box__one--top,
+      .box__three .box__one--top {
+        height: 4.75rem;
+      }
+      .box__two .box__one--top .one-top--text,
+      .box__three .box__one--top .one-top--text {
+        height: 1.9rem;
+        line-height: 1.05rem;
+        -webkit-line-clamp: 2;
+      }
+      .box__two .box__one--bottom {
+      }
+      .box__two .box__one--bottom img {
+        width: 4.85rem;
+        height: 4.85rem;
+      }
+      .box__one .box__one--bottom span {
+        width: 100%;
+        margin-top: 0.575rem;
+        display: block;
+      }
+
+      /* 第三个盒子 */
+      .box__three {
+        height: 21.8rem;
+      }
+      .box__three ul {
+        overflow: hidden;
+      }
+      .box__three ul li {
+        float: left;
+        width: 4.85rem;
+        height: 4.85rem;
+        margin-right: 0.2rem;
+        margin-bottom: 0.2rem;
+      }
+      ul li:nth-child(3n) {
+        margin-right: 0;
+      }
+      .box__three ul li img {
+        max-width: 4.85rem;
+        max-height: 4.85rem;
+      }
+      .box__three .box__one--bottom {
+        float: right;
+        width: 15rem;
+        height: 15rem;
+      }
+      .box__three .box__one--bottom span {
+        margin-top: 0.575rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 最大的盒子 -->
+    <div class="box">
+      <div class="box__one">
+        <div class="box__one--top">
+          <div class="one-top--user">
+            <div class="one-top--photo">
+              <img
+                src="http://img4.imgtn.bdimg.com/it/u=4090445026,3508850206&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </div>
+            <div class="one-top--title">斯利安安安安哥哥</div>
+          </div>
+          <div class="one-top--text">
+            不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看
+          </div>
+        </div>
+        <div class="box__one--bottom">
+          <img
+            src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556258148231&di=91ac6cbf5943dc768ae5945b5fdda428&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F-vo3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F8435e5dde71190efa3be16b0ca1b9d16fdfa601c.jpg"
+            alt=""
+          />
+          <span>20xx年xx月xx日 xx:xx</span>
+        </div>
+      </div>
+      <div class="box__one box__two">
+        <div class="box__one--top">
+          <div class="one-top--user">
+            <div class="one-top--photo">
+              <img
+                src="http://img4.imgtn.bdimg.com/it/u=4090445026,3508850206&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </div>
+            <div class="one-top--title">斯利安安安安哥哥</div>
+          </div>
+          <div class="one-top--text">
+            不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看
+          </div>
+        </div>
+        <div class="box__one--bottom">
+          <img
+            src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556258148231&di=91ac6cbf5943dc768ae5945b5fdda428&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F-vo3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F8435e5dde71190efa3be16b0ca1b9d16fdfa601c.jpg"
+            alt=""
+          />
+          <img
+            src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=130796291,2326783185&fm=26&gp=0.jpg"
+            alt=""
+          />
+          <span>20xx年xx月xx日 xx:xx</span>
+        </div>
+      </div>
+      <div class="box__three box__one">
+        <div class="box__one--top">
+          <div class="one-top--user">
+            <div class="one-top--photo">
+              <img
+                src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2998671680,3974497312&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </div>
+            <div class="one-top--title">斯利安安安安哥哥</div>
+          </div>
+          <div class="one-top--text">
+            不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看不过在戏台上罢了，悲剧将人生的有价值的东西毁灭给人看，喜剧将那无价值的撕破给人看
+          </div>
+        </div>
+        <div class="box__one--bottom">
+          <ul>
+            <li>
+              <img
+                src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1310241018,840739577&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=552083154,3206750507&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1106474343,2520639495&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2171771095,3516668969&fm=15&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2510478288,2637665067&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=194419278,1851312541&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2598636987,1616477469&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2652128207,1929561889&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+            <li>
+              <img
+                src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1248843232,1364110478&fm=26&gp=0.jpg"
+                alt=""
+              />
+            </li>
+          </ul>
+          <span>20xx年xx月xx日 xx:xx</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  setFont();
+  window.onresize = function() {
+    setFont();
+  };
+
+  function setFont() {
+    var baseVal = 40;
+    var pageWidth = 750;
+    var screenWidth = document.querySelector("html").offsetWidth;
+    var fontsize = (baseVal * screenWidth) / pageWidth;
+    document.querySelector("html").style.fontSize = fontsize + "px";
+  }
+</script>
