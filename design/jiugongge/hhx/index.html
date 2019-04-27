@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>图文回帖展示</title>
+  <link rel="stylesheet/less" href="./css/style.less">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
   <script>
     // rem
     (function(scope){
@@ -33,108 +35,6 @@
       loop();
     }(window));
   </script>
-  <style>
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  ul {
-    list-style: none;
-  }
-  .article__list {
-    width: 100%;
-    background: #fff;
-    box-sizing: border-box;
-  }
-  .article__item {
-    position: relative;
-    padding: 0.8rem 0.8rem 0.775rem;
-  }
-  .article__item::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0.025rem;
-    transform: scaleY(0.5);
-    background: #999;
-  }
-  .article__item:last-child::after {
-    height: 0;
-  }
-  .article__head {
-    font-size: 0;
-  }
-  .article__main {
-    margin-left: 2.15rem;
-  }
-  .article--content {
-    font-size: 0.7000000000000001rem;
-    font-family: "Microsoft YaHei";
-    color: #666666;
-    line-height: 1.05rem;
-    text-align: left;
-  }
-  .article__img--wrap {
-    position: relative;
-    width: 100%;
-    height: 6.25rem;
-    margin: 0.625rem 0 0.5rem;
-    border-radius: 0.15000000000000002rem;
-    overflow: hidden;
-  }
-  .article__img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-  }
-  .article__img--list {
-    margin: 0.48750000000000004rem 0;
-  }
-  .article__img--item {
-    display: inline-block;
-    vertical-align: middle;
-    width: 4.95rem;
-    height: 4.9375rem;
-  }
-  .article__img--bg {
-    position: relative;
-    width: 4.8500000000000005rem;
-    height: 4.8500000000000005rem;
-    border-radius: 0.2rem;
-    background: #ccc;
-    overflow: hidden;
-  }
-  .article--time {
-    font-size: 0.6000000000000001rem;
-    font-family: "SourceHanSansCN";
-    color: #999999;
-    text-align: left;
-  }
-
-  .user--avatar {
-    display: inline-block;
-    vertical-align: middle;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    outline: none;
-    border: none;
-  }
-  .user--name {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 0.2rem;
-    font-size: 0.8rem;
-    font-family: "Microsoft YaHei";
-    color: #333333;
-    text-align: center;
-  }
-  </style>
   <script src="https://cdn.bootcss.com/vue/2.6.8/vue.min.js"></script>
 
 </head>
@@ -147,14 +47,14 @@
           <p class="user--name">{{ item.name }}</p>
         </div>
         <div class="article__main">
-          <div class="article--content">{{ item.content | formatContent }}</div>
+          <div class="article--content">{{ item.content }}</div>
           <div class="article__img--wrap" v-if="item.imgs.length === 1">
-            <img class="article__img" :src="item.imgs[0]" alt="" />
+            <img class="article__img" :src="item.imgs[0]" alt="" @load="setStyle" />
           </div>
           <div class="article__img--list" v-if="item.imgs.length > 1">
             <div class="article__img--item" v-for="(img,  index) in item.imgs">
               <div class="article__img--bg">
-                <img class="article__img" :src="img" alt="">
+                <img class="article__img":src="img" alt="" @load="setStyle">
               </div>
             </div>
           </div>
@@ -171,46 +71,54 @@
     data: {
       articles: [
         {
-          avatar: 'https://uc.bozhong.com/data/avatar/000/83/98/00_avatar_middle.jpg',
-          name: '斯利安安安姐姐',
-          content: '由中国红十字基金会和嫣然天使基金主办，北京斯利安药业和相关连锁作为协办的大型捐赠活动——“斯利安天使行动” 预防出生缺陷公益关爱行动（2017年）项目—— 深圳站东南西北',
+          avatar: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1885973396,380188832&fm=26&gp=0.jpg',
+          name: '吉卜力',
+          content: '吉卜力工作室（Ghibli），是一家日本动画工作室。成立于1985年中旬，原附属于德间书店，位于日本东京都近郊的小金井市，目前约有300名员工，由导演宫崎骏以及他的同事高畑勋、铃木敏夫等一起统筹，作曲家久石让也为吉卜力工作室的许多作品制作过电影音乐。工作室标识为其代表作品《龙猫》。',
           imgs: [
-            'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=03ffa97602d79123ffe092749d355917/48540923dd54564e5b271d47bdde9c82d1584f0a.jpg'
+            'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2354379938,1616540489&fm=211&gp=0.jpg'
           ],
           time: '2017年5月18日 18:00'
         },
         {
-          avatar: 'https://uc.bozhong.com/data/avatar/000/83/98/00_avatar_middle.jpg',
-          name: '斯利安安安姐姐',
-          content: '由中国红十字基金会和嫣然天使基金主办，北京斯利安药业和相关连锁作为协办的大型捐赠活动——“斯利安天使行动” 预防出生缺陷公益关爱行动（2017年）项目由中国红十字基金会和嫣然天使基金主办，北京斯利安药业和相关连锁作为协办的大型捐赠活动——“斯利安天使行动” 预防出生缺陷公益关爱行动（2017年）项目',
+          avatar: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1885973396,380188832&fm=26&gp=0.jpg',
+          name: '吉卜力',
+          content: '目前约有300名员工，由导演宫崎骏以及他的同事高畑勋、铃木敏夫等一起统筹，作曲家久石让也为吉卜力工作室的许多作品制作过电影音乐。工作室标识为其代表作品《龙猫》。',
           imgs: [
-            'https://ss0.baidu.com/94o3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=496861f257ee3d6d3dc681cb73176d41/902397dda144ad3441d7f5d2dea20cf431ad857e.jpg',
-            'https://uc.bozhong.com/data/avatar/000/83/98/00_avatar_middle.jpg'
+            'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=235947137,4265040841&fm=26&gp=0.jpg',
+            'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3403121710,1905730681&fm=26&gp=0.jpg'
           ],
           time: '2017年5月18日 18:00'
         },
         {
-          avatar: 'https://uc.bozhong.com/data/avatar/000/83/98/00_avatar_middle.jpg',
-          name: '斯利安安安姐姐',
-          content: '由中国红十字基金会和嫣然天使基金主办，北京斯利安药业和相关连锁作为协办的大型捐赠活动——“斯利安天使行动” 预防出生缺陷公益关爱行动（2017年）项目',
+          avatar: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1885973396,380188832&fm=26&gp=0.jpg',
+          name: '吉卜力',
+          content: '“吉卜力”（Ghibli）是由宫崎骏命名，意思是在撒哈拉沙漠上季节热风，在纪录片《梦与狂想的世界》中，宫崎骏提到“吉卜力”是他从一架飞机的名字随便取来的。',
           imgs: [
-            'https://scdn.bozhong.com/source/bbs/img/bbs_v3/download_fkzr.jpg',
-            'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2805797060,3200956418&fm=26&gp=0.jpg',
-            'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2594133428,697095914&fm=26&gp=0.jpg',
-            'https://image.seedit.com/sys/2019/04/19/9415cdaa1a1cf66525f859fce3e0f7f6888776.jpg',
-            'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3558398317,3625917731&fm=26&gp=0.jpg',
-            'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=624380816,491726474&fm=11&gp=0.jpg',
-            'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1658931361,365016276&fm=26&gp=0.jpg',
-            'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1572667154,775225092&fm=26&gp=0.jpg',
-            'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2361553668,2424455755&fm=26&gp=0.jpg'
+            'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2957370154,1955649494&fm=26&gp=0.jpg',
+            'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1406025163,47635157&fm=26&gp=0.jpg',
+            'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2293969994,861205959&fm=26&gp=0.jpg',
+            'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1075527549,4176547431&fm=26&gp=0.jpg',
+            'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3479164320,3398402085&fm=26&gp=0.jpg',
+            'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=312460592,3594793670&fm=26&gp=0.jpg',
+            'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3616448576,1205001905&fm=26&gp=0.jpg',
+            'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2681513404,2939072703&fm=26&gp=0.jpg',
+            'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3000601793,33069105&fm=26&gp=0.jpg'
           ],
           time: '2017年5月18日 18:00'
         }
-      ]
+      ],
+      style: null
     },
-    filters: {
-      formatContent(str) {
-        return str.length > maxContentLen ? str + '...' : str
+    methods: {
+      setStyle(e) {
+        const img = e.target
+        const imgWidth = img.offsetWidth
+        const imgHeight = img.offsetHeight
+        if (imgWidth > imgHeight) {
+          img.style.height = '100%'
+        } else if (imgWidth < imgHeight) {
+          img.style.width = '100%'
+        }
       }
     }
   })

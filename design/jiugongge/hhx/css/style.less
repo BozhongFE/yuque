@@ -1,0 +1,126 @@
+@rem: 1 / 40rem;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+
+.article {
+  &__list {
+    width: 100%;
+    background: #fff;
+    box-sizing: border-box;
+  }
+  &__item {
+    position: relative;
+    padding: 32 * @rem 32 * @rem 31 * @rem;
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1 * @rem;
+      transform: scaleY(0.5);
+      background: #999;
+    }
+    &:last-child::after {
+      height: 0;
+    }
+  }
+  &__head {
+    font-size: 0;
+  }
+  &__main {
+    margin-left: 86 * @rem;
+  }
+  &--content {
+    font-size: 28 * @rem;
+    font-family: "Microsoft YaHei";
+    color: rgb(102, 102, 102);
+    line-height: 44 * @rem;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden
+  }
+  &__img--wrap {
+    position: relative;
+    width: 100%;
+    height: 250 * @rem;
+    margin: 25 * @rem 0 20 * @rem;
+    border-radius: 6 * @rem;
+    overflow: hidden;
+  }
+  &__img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+  }
+  &__img--list {
+    margin: 19.5 * @rem 0;
+  }
+  &__img--item {
+    display: inline-block;
+    vertical-align: middle;
+    width: 194 * @rem;
+    height: 194 * @rem;
+    text-align: center;
+    &:nth-child(3n - 1) {
+      width: 210 * @rem;
+      height: 194 * @rem;
+    }
+    &:nth-child(4),
+    &:nth-child(5),
+    &:nth-child(6) {
+      height: 208 * @rem;
+      .article__img--bg {
+        margin-top: 7 * @rem;
+      }
+    }
+  }
+  &__img--bg {
+    position: relative;
+    display: inline-block;
+    width: 194 * @rem;
+    height: 194 * @rem;
+    border-radius: 8 * @rem;
+    background: #ccc;
+    overflow: hidden;
+  }
+
+  &--time {
+  font-size: 24 * @rem;
+  font-family: "SourceHanSansCN";
+  color: rgb(153, 153, 153);
+  // line-height: 1.2;
+  text-align: left;
+  }
+
+}
+
+.user--avatar {
+  display: inline-block;
+  vertical-align: middle;
+  width: 80 * @rem;
+  height: 80 * @rem;
+  border-radius: 50%;
+  outline: none;
+  border: none;
+}
+.user--name {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8 * @rem;
+  font-size: 32 * @rem;
+  font-family: "Microsoft YaHei";
+  color: rgb(51, 51, 51);
+  text-align: center;
+}
