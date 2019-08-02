@@ -48,10 +48,12 @@ a {
 .cropper-mask:before {
   left: 0;
   background-image: url('https://cdn.nlark.com/yuque/0/2019/png/191161/1564369037506-assets/web-upload/e873d01e-9630-4e5c-956b-65edc8c55bc7.png');
+  z-index: 10;
 }
 .cropper-mask:after {
   right: 0;
   background-image: url('https://cdn.nlark.com/yuque/0/2019/png/191161/1564369037552-assets/web-upload/e59e4521-66c2-4aa4-9b79-94882b8a4b5b.png');
+  z-index: 10;
 }
 .cropper-canvas {
   position: absolute;
