@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>透明背景</title>
+  <link rel="stylesheet" href="index.css">
+  <script>
+    const html = document.getElementsByTagName('html')[0];
+    const hWidth = document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+    html.style.fontSize = (hWidth / 750) * 40 + 'px';
+  </script>
+</head>
+<body>
+  <div class="index">
+    <div class="container">
+      <div class="wrap-top">
+        <div class="tip tip-first">
+          <p>让试纸与有效区域对齐</p>
+        </div>
+        <div class="area area-first"></div>
+        <div class="area area-second"></div>
+        <div class="tip tip-second">
+          <p>友情提示：</p>
+          <p>各品牌试纸测试结果<em>有效时间</em>略有不同，请认真查看试纸说明</p>
+        </div>
+      </div>
+      <div class="wrap-bottom">
+        <ul>
+          <li>
+            <span>取消</span>
+          </li>
+          <li>
+            <span>确定</span>
+          </li>
+        </ul>
+      </div>
+      <div class="upload">
+        <img src="./bg.jpeg" alt="">
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const wrap = document.getElementsByClassName('wrap-top')[0];
+  const img = document.querySelector('.upload img');
+
+  // 全局变量
+  let startX, startY, deltaX, deltaY, X, Y;
+  let isMove = false;
+  const maxDistanceX = window.innerWidth - 10;
+  const maxDistanceY = wrap.clientHeight - 10;
+
+  wrap.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+
+    let touch = e.touches[0];
+    startX = touch.pageX;
+    startY = touch.pageY;
+  });
+
+  wrap.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    
+    let touch = e.touches[0];
+    deltaX = touch.pageX;
+    deltaY = touch.pageY;
+
+    X = deltaX - startX;
+    Y = deltaY - startY;
+    
+    // 设置边界
+    if (X > 0) {
+      X = X < maxDistanceX ? X : maxDistanceX;
+    } else {
+      X = X > -maxDistanceX ? X : -maxDistanceX;
+    }
+
+    if (Y > 0) {
+      Y = Y < maxDistanceY ? Y : maxDistanceY;
+    } else {
+      Y = Y > -maxDistanceY ? Y : -maxDistanceY;
+    }
+
+    img.style.transform = 'translate3d('+ X +'px, '+ Y +'px, 0)';
+
+    isMove = true;
+  });
+
+  wrap.addEventListener('touchend', (e) => {
+    e.preventDefault();
+
+    if (isMove) {     
+      isMove = false; 
+    }
+  });
+</script>
+</html>
