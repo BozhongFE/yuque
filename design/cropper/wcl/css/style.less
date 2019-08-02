@@ -1,0 +1,127 @@
+@rem: 1/40rem;
+
+body {
+  margin: 0;
+}
+a {
+  text-decoration: none;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+.cropper {
+  position: relative;
+  height: 100%;
+  &__panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 128*@rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &__mask {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 320*@rem;
+      height: 26*@rem;
+      border: 2000px solid rgba(0, 0, 0, 0.6);
+      z-index: 1;
+      &--demo {
+        position: absolute;
+        top: -65*@rem;
+        width: 320*@rem;
+        height: 116*@rem;
+        background: url(../img/icon_demo.png) no-repeat;
+        background-size: 100% 100%;
+        span {
+          position: absolute;
+          top: -21*@rem;
+          left: 0;
+          right: 0;
+          text-align: center;
+          font-size: 16*@rem;
+          line-height: 16*@rem;
+          color: #FFDE00;
+        }
+      }
+      &--cropper-section {
+        position: relative;
+        padding-right: 10*@rem;
+        width: 320*@rem;
+        height: 26*@rem;
+        text-align: right;
+        line-height: 26*@rem;
+        font-size: 16*@rem;
+        color: #FC0585;
+        box-sizing: border-box;
+        .icon-cropper {
+          content: '';
+          position: absolute;
+          top: 0;
+          width: 5.5*@rem;
+          height: 26*@rem;
+        }
+        &::before {
+          .icon-cropper();
+          left: 0;
+          background: url(../img/icon_cropper_left.png);
+          background-size: 100%;
+        }
+        &::after {
+          .icon-cropper();
+          right: 0;
+          background: url(../img/icon_cropper_right.png);
+          background-size: 100%;
+        }
+      }
+      &--hint {
+        margin-top: 34*@rem;
+        margin-left: 28*@rem;
+        font-size: 16*@rem;
+        color: #fff;
+        em {
+          font-style: normal;
+          color: #FFDE00;
+        }
+      }
+    }
+  }
+  &__bar {
+    position: absolute;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    display: flex;
+    height: 128*@rem;
+    align-items: center;
+    justify-content: center;
+    .btn {
+      width: 60*@rem;
+      height: 60*@rem;
+      line-height: 60*@rem;
+      border-radius: 100%;
+      text-align: center;
+      font-size: 16*@rem;
+    }
+    &--cancel {
+      .btn();
+      border: 1*@rem solid #d8d8d8;
+      color: #333;
+    }
+    &--submit {
+      margin-left: 60*@rem;
+      .btn();
+      border: 1*@rem solid #ff90ac;
+      color: #ff90ac;
+    }
+  }
+}
