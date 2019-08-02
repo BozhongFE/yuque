@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>emmm..</title>
+  <script>
+    // rem
+    (function(scope){
+      // 下面375对应设计稿的宽度
+      // document.body.innerHTML = window.innerWidth;
+      var ua = navigator.userAgent.toLocaleLowerCase();
+      var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+      var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+      // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+      var loop = function() {
+		    var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+        var docWidth = window.innerWidth;
+        // 宽度获取不成功延时执行
+        if (!winWidth && !docWidth) return setTimeout(function() {
+          loop();
+        }, 100);
+        var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+        document.documentElement.style.fontSize = (_width / 375 * 40) + 'px';
+        scope.addEventListener(eventName, function(){
+          clearTimeout(scope.orientationChangedTimeout);
+          scope.orientationChangedTimeout = setTimeout(function(){
+            document.documentElement.style.fontSize = (_width / 375 * 40) + 'px';
+          }, howLong);
+        }, false);
+      };
+      loop();
+    }(window));
+  </script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="cropper">
+    <div class="cropper-bd">
+      <img class="cropper-pic" src="https://cdn.nlark.com/yuque/0/2019/jpeg/191161/1564369055197-assets/web-upload/3c2b663f-8d88-42d8-800d-1a94e375e525.jpeg" />
+      <div class="cropper-mask">
+        <canvas class="cropper-canvas" id="canvas"></canvas>
+        <div class="cropper-page">
+          <p class="cropper-page__tips">让试纸与有效区域对齐</p>
+        </div>
+        <p class="cropper-tips">友情提示<br/>各品牌试纸测试结果<span class="cropper-tips--highlight">有效时间</span>略有不同，请认真查看试纸说明</p>
+      </div>
+    </div>
+    <div class="cropper-ft">
+      <a href="javascript:" class="cropper-btn" id="btn_cancle">取消</a>
+      <a href="javascript:" class="cropper-btn primary" id="btn_confirm">确认</a>
+    </div>
+  </main>
+  <script>
+    var Pic = document.querySelector('.cropper-pic');
+    var Mask = document.querySelector('.cropper-mask');
+    var timeoutFn = null; // 定时器
+
+    // 上一个位置
+    var lastX = 0;
+    var lastY = 0;
+
+    // 图片当前移动位置
+    var moveX = 0;
+    var moveY = 0;
+
+    // 窗口与375比例
+    var scale = 375 / window.innerWidth;
+
+    // 图片移动 
+    var setPicPosition = function() {
+      var style = 'transform: translate(' + moveX + 'px,' + moveY +'px)';
+      Pic.setAttribute("style", style);
+    };
+
+    // 触摸监听
+    Mask.addEventListener('touchstart', function(e) {
+      var targetTouch = e.changedTouches[0] || {};
+
+      // 记录触摸开始位置
+      lastX = targetTouch.pageX;
+      lastY = targetTouch.pageY;
+    });
+    var targetTouch = null;
+    Mask.addEventListener('touchmove', function(e) {
+      e.preventDefault(); // 移动的时候阻止默认事件
+      targetTouch = e.changedTouches[0] || {};
+
+      if (timeoutFn) return false;
+
+      // 节流
+      timeoutFn = setTimeout(function() {
+        pageX = targetTouch.pageX;
+        pageY = targetTouch.pageY;
+
+        // 计算位移量
+        moveY += pageY - lastY;
+        moveX += pageX - lastX;
+        setPicPosition();
+
+        // 记录最后一个触摸点
+        lastX = pageX;
+        lastY = pageY;
+
+        timeoutFn = null;
+      }, 100);
+    });
+    
+    // 取消
+    document.querySelector('#btn_cancle').addEventListener('click', function() {
+      moveX = 0;
+      moveY = 0;
+      setPicPosition();
+    })
+    
+    // 以canvas的位置尺寸等为标准进行裁剪
+    var canvas = document.querySelector('#canvas');
+    var ctx = canvas.getContext('2d');
+
+    // 重设canvas属性使图片能1:1显示
+    var clientRect = canvas.getBoundingClientRect(); // 获取计算后的css
+    var canvasWidth = clientRect.width;
+    var canvasHeight = clientRect.height;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    var canvasSx = clientRect.left;
+    var canvasSy = clientRect.top;
+    // 裁剪
+    document.querySelector('#btn_confirm').addEventListener('click', function() {
+      ctx.drawImage(Pic, canvasSx - moveX, canvasSy - moveY, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
+      // Pic.classList.add('hide');
+    });
+  </script>
+</body>
+</html>
