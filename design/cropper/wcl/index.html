@@ -2,11 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel="stylesheet/less" href="./css/style.less">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+  <script>
+    // rem
+    (function(scope){
+      // 下面750对应设计稿的宽度
+      // document.body.innerHTML = window.innerWidth;
+      var ua = navigator.userAgent.toLocaleLowerCase();
+      var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+      var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+      // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+      var loop = function() {
+        var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+        var docWidth = window.innerWidth;
+        // 宽度获取不成功延时执行
+        if (!winWidth && !docWidth) return setTimeout(function() {
+          loop();
+        }, 100);
+        var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+        document.documentElement.style.fontSize = (_width / 375 * 40) + 'px';
+        scope.addEventListener(eventName, function(){
+          clearTimeout(scope.orientationChangedTimeout);
+          scope.orientationChangedTimeout = setTimeout(function(){
+            document.documentElement.style.fontSize = (_width / 375 * 40) + 'px';
+          }, howLong);
+        }, false);
+      };
+      loop();
+    }(window));
+  </script>
 </head>
 <body>
-  
+  <div id="app">
+    <section class="cropper">
+      <div class="cropper__panel">
+        <div class="cropper__panel__mask">
+          <div class="cropper__panel__mask--demo"><span>让试纸与有效区域对齐</span></div>
+          <div class="cropper__panel__mask--cropper-section">试纸宽度</div>
+          <div class="cropper__panel__mask--hint">
+            友情提示：<br/>各品牌试纸测试结果<em>有效时间</em>略有不<br/>同，请认真查看试纸说明
+          </div>
+        </div> 
+        <img id="JS_testImg" src="./img/test.jpeg" alt="">
+      </div>
+      <div class="cropper__bar">
+        <a class="cropper__bar--cancel" href="javascrpt:;">取消</a>
+        <a class="cropper__bar--submit" href="javascrpt:;">确定</a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    var panel = document.querySelector('.cropper__panel');
+    var mover = {
+      startX: 0,
+      startY: 0,
+      moveX: 0,
+      moveY: 0,
+    };
+    panel.addEventListener('touchstart', function(e) {
+      mover.startX = e.touches[0].clientX;
+      mover.startY = e.touches[0].clientY;
+    }, false);
+    panel.addEventListener('touchmove', function(e) {
+      moveHandler(e);
+    }, false);
+    panel.addEventListener('touchend', function(e) {
+      moveHandler(e);
+      imgPos.startX = imgPos.lastX;
+      imgPos.startY = imgPos.lastY;
+    }, false);
+    function moveHandler(e) {
+      mover.moveX = e.changedTouches[0].clientX - mover.startX;
+      mover.moveY = e.changedTouches[0].clientY - mover.startY;
+      move(mover);
+    }
+
+    var img = document.querySelector('#JS_testImg');
+    var imgPos = {
+      startX: 0,
+      startY: 0,
+      lastX: 0,
+      lastY: 0,
+    }
+    function move(mover) {
+      imgPos.lastX = imgPos.startX + mover.moveX;
+      imgPos.lastY = imgPos.startY + mover.moveY;
+      img.style.transform = 'translate(' + imgPos.lastX + 'px,' + imgPos.lastY + 'px)';
+      img.style.webkitTransform = 'translate(' + imgPos.lastX + 'px,' + imgPos.lastY + 'px)';
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>cropper</title>
+  <link rel="stylesheet/less" href="./css/style.less">
+  <script src="./js/less.min.js"></script>
+  <script>
+    // rem
+    (function (scope) {
+      // 下面750对应设计稿的宽度
+      // document.body.innerHTML = window.innerWidth;
+      var ua = navigator.userAgent.toLocaleLowerCase();
+      var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+      var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+      // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+      var loop = function () {
+        var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+        var docWidth = window.innerWidth;
+        // 宽度获取不成功延时执行
+        if (!winWidth && !docWidth) return setTimeout(function () {
+          loop();
+        }, 100);
+        var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+        document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+        scope.addEventListener(eventName, function () {
+          clearTimeout(scope.orientationChangedTimeout);
+          scope.orientationChangedTimeout = setTimeout(function () {
+            document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+          }, howLong);
+        }, false);
+      };
+      loop();
+    }(window));
+  </script>
+  <script src="./js/hammer.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div class="cropper__main">
+      <img class="cropper__img" src="./img/img.jpeg"
+        style="transform: translate3d(0, 0, 0) scale(1, 1) rotate3d(0, 0, 0, 0deg);" />
+    </div>
+    <p class="yellow-font cropper__text cropper__title">让试纸与有效区域对齐</p>
+    <div class="cropper__example"></div>
+    <!-- <div class="cropper__highlight"></div> -->
+    <p class="cropper__tip cropper__text">友情提示：<br>各品牌试纸测试结果<span class="yellow-font">有效时间</span>略有不<br>同，请认真查看试纸说明
+      试纸宽度</p>
+    <div class="cropper__mask--wrap">
+      <div class="cropper__mask">
+        <p class="pink-font cropper__mask--tip">试纸宽度</p>
+      </div>
+      <div class="cropper__button--group">
+        <button class="cropper__button cropper__button--cancel">取消</button>
+        <button class="cropper__button cropper__button--confirm">确定</button>
+      </div>
+    </div>
+    <div class="cropper__mask--transparent">
+    </div>
+  </div>
+  <script>
+    const img = document.querySelector('.cropper__img');
+    const reqAnimationFrame = (function () {
+      return window[Hammer.prefixed(window, 'requestAnimationFrame')] || function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+      };
+    })();
+
+    const el = document.querySelector('.cropper__mask--transparent');
+
+    let START_X = 0;
+    let START_Y = 0;
+
+    let ticking = false;
+    let transform;
+
+    const mc = new Hammer.Manager(el);
+
+    mc.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));
+    mc.add(new Hammer.Rotate({ threshold: 0 })).recognizeWith(mc.get('pan'));
+    mc.add(new Hammer.Pinch({ threshold: 0 })).recognizeWith([mc.get('pan'), mc.get('rotate')]);
+
+    mc.on("panstart panmove panend", onPan);
+    mc.on("rotatestart rotatemove", onRotate);
+    mc.on("pinchstart pinchmove", onPinch);
+
+
+    function resetElement() {
+      img.className = 'animate';
+      transform = {
+        translate: { x: START_X, y: START_Y },
+        scale: 1,
+        angle: 0,
+        rx: 0,
+        ry: 0,
+        rz: 0
+      };
+
+      requestElementUpdate();
+    }
+
+    function updateElementTransform() {
+      var value = [
+        'translate3d(' + transform.translate.x + 'px, ' + transform.translate.y + 'px, 0)',
+        'scale(' + transform.scale + ', ' + transform.scale + ')',
+        'rotate3d(' + transform.rx + ',' + transform.ry + ',' + transform.rz + ',' + transform.angle + 'deg)'
+      ];
+
+      value = value.join(" ");
+      img.style.webkitTransform = value;
+      img.style.mozTransform = value;
+      img.style.transform = value;
+      ticking = false;
+    }
+
+    function requestElementUpdate() {
+      if (!ticking) {
+        reqAnimationFrame(updateElementTransform);
+        ticking = true;
+      }
+    }
+
+
+    function onPan(ev) {
+      img.className = '';
+      transform.translate = {
+        x: START_X + ev.deltaX,
+        y: START_Y + ev.deltaY
+      };
+      if (ev.type === 'panend') {
+        START_X = transform.translate.x;
+        START_Y = transform.translate.y;
+      }
+
+      requestElementUpdate();
+    }
+
+    let initScale = 1;
+    function onPinch(ev) {
+      ev.preventDefault()
+      if (ev.type == 'pinchstart') {
+        initScale = transform.scale || 1;
+      }
+
+      img.className = '';
+      transform.scale = initScale * ev.scale;
+
+      requestElementUpdate();
+    }
+
+    let initAngle = 0;
+    function onRotate(ev) {
+      if (ev.type == 'rotatestart') {
+        initAngle = transform.angle || 0;
+      }
+
+      img.className = '';
+      transform.rz = 1;
+      transform.angle = initAngle + ev.rotation;
+
+      requestElementUpdate();
+    }
+
+    resetElement();
+  </script>
+</body>
+
+</html>
