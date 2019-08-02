@@ -23,9 +23,7 @@ a {
 .cropper-bd {
   position: relative;
   flex: 1;
-}
-.cropper-pic {
-  width: 100%;
+  overflow: hidden;
 }
 .cropper-mask {
   position: absolute;
