@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no" />
+  <meta charset="utf-8">
+  <title>试纸校准</title>
+  <style>
+      *{
+        padding: 0;
+        margin: 0;
+      }
+      body,html {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-size: 16px;
+      }
+      .wrap {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        overflow: hidden;
+      }
+      .highlight {
+        color: #ffde00;
+      }
+      .wrap-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width:200px;
+        height:50px;
+        border-style: solid;
+        border-color: rgba(0,0,0,0.5);
+        pointer-events: none;
+      }
+      .wrap-box_frame ,.wrap-image{
+        position: relative;
+      }
+      .wrap-box_frame  {
+        height: 100%;;
+      }
+      .wrap-box_frame::after, .wrap-box_frame::before{
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 20px;
+        height: 100% ;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size:  auto 100%;
+      }
+      .wrap-box_frame::after { 
+        left: 0;
+        background-image: url('https://cdn.nlark.com/yuque/0/2019/png/191161/1564369037506-assets/web-upload/e873d01e-9630-4e5c-956b-65edc8c55bc7.png');
+      }
+      .wrap-box_frame::before {
+        right:0;
+        background-position: right center;
+        background-image: url('https://cdn.nlark.com/yuque/0/2019/png/191161/1564369037552-assets/web-upload/e59e4521-66c2-4aa4-9b79-94882b8a4b5b.png');
+      }
+      .template {
+        width: 100%;
+        position: absolute;
+        top: -88px;
+      }
+      .template img {
+        max-width: 100%;
+      }
+      .template-txt {
+        text-align: center;
+        margin-bottom: 4px;
+      }
+      .tips {
+        position: absolute;
+        top: 56px;
+        left: 10%;
+        width: 80%;
+        color: #fff;
+      }
+      .btn-box {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 128px;
+        z-index: 2;
+        text-align: center; 
+      }
+      .btn-box::after {
+        content: "";
+        height: 100%;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .btn-box_item {
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 40px;
+        border: 1px solid #d8d8d8;
+        color: #333;
+      }
+      .btn-box_item:nth-child(2) {
+        border-color: #ff90ac;
+        color: #ff90ac;
+      }
+      #myCanvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        pointer-events: none;
+      }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="wrap-image" src="https://cdn.nlark.com/yuque/0/2019/jpeg/191161/1564369055197-assets/web-upload/3c2b663f-8d88-42d8-800d-1a94e375e525.jpeg" alt="">
+    <div class="wrap-box">
+      <div class="wrap-box_frame"></div>
+      <div class="template">
+        <div class="template-txt highlight">让试纸与有效区域对齐</div>
+        <img src="https://cdn.nlark.com/yuque/0/2019/png/191161/1564369037621-assets/web-upload/afd65975-5ac8-4d9c-a28d-8707bbb105dc.png" alt="">
+      </div>
+      <div class="tips">
+        友请提示：<br>
+        各品牌试纸测试结果<span class="highlight">有效时间</span>略有不同，请认真查看试纸说明
+      </div>
+    </div>
+    <canvas id="myCanvas"></canvar>
+  </div>
+  <div class="btn-box">
+    <span class="btn-box_item">取消</span>
+    <span class="btn-box_item" data-event="confirm">确认</span>
+  </div>
+<script>
+  window.onload = function () {
+    let startX, startY;
+    let x = 0;
+    let y = 0;
+    const px = function (val) {
+      return val + 'px';
+    };
+    const init = function () {
+      const wrap = document.querySelector('.wrap');
+      const wrapBox = document.querySelector('.wrap-box');
+      const wrapImg = document.querySelector('.wrap-image');
+      const myCanvas=document.getElementById("myCanvas");
+      const btnItem = document.querySelectorAll('.btn-box_item');
+      const winWidth = document.body.offsetWidth;
+      const winHeight = document.body.offsetHeight;
+      const wrapHeight = winHeight - 128;
+      const wrapBoxW = winWidth <= 330 ? winWidth * 0.9 : 319;
+      const wrapBoxH = winWidth <= 330 ? 26 / 319 * wrapBoxW : 26;
+      const borderTop = px((winHeight - 128 - wrapBoxH) / 2);
+      const borderLeft = px((winWidth - wrapBoxW) / 2);
+      wrap.style.cssText = 'width:' + px(winWidth) + ';height:' + px(wrapHeight);
+      myCanvas.style.height = px(wrapHeight);
+      wrapBox.style.cssText = 'width:'+px(wrapBoxW)+'; height:'+px(wrapBoxH)+'; border-width:' +  borderTop + ' ' + borderLeft + ';';
+      const events = {
+        start: function (e) {
+          e.preventDefault();
+          startX = e.changedTouches[0].pageX;
+          startY = e.changedTouches[0].pageY;
+        },
+        move: function (e) {
+          e.preventDefault();
+          if (e.changedTouches.length > 1) {
+            this.scale();
+          } else {
+            x = e.changedTouches[0].pageX - startX;
+            y = e.changedTouches[0].pageY - startY;
+            wrapImg.style.cssText = 'transform: translate('+ px(x)+ ',' +px(y)+');';
+          }
+        },
+        end: function () {},
+        scale: function () {},
+        button: function () {
+          const type = this.getAttribute('data-event');
+          if (type) {
+            cut();
+          } else {
+            alert('取消');
+          }
+        }
+      }
+      const cut = function () {
+        const ctx = myCanvas.getContext("2d");
+        const imgEle = wrapImg.querySelector('img');
+        const img = new Image();
+        img.src= 'https://cdn.nlark.com/yuque/0/2019/jpeg/191161/1564369055197-assets/web-upload/3c2b663f-8d88-42d8-800d-1a94e375e525.jpeg';
+        //ctx.drawImage(img, x, y, img.offsetWidth, img.offsetHeight * myCanvas.offsetWidth / img.offsetWidth );
+      }
+      wrapImg.addEventListener('touchstart', events.start, false); 
+      wrapImg.addEventListener('touchmove', events.move, false);
+      btnItem[0].addEventListener('click', events.button, false);  
+      btnItem[1].addEventListener('click', events.button, false); 
+    }
+    init();
+  
+    window.onresize = function () {
+      init();
+    }    
+  }
+</script>
+</html>
