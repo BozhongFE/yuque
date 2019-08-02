@@ -1,0 +1,11 @@
+{
+  "application":{
+    "less": [
+      {
+        "from": "./index.less",
+        "to": "./index.css",
+        "debug": true
+      }
+    ]
+  }
+}
