@@ -1,0 +1,99 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+input, select {
+  border: 0;
+}
+.prize-draw {
+  width: 100vw;
+  height: 100vh;
+  background: url('../img/yunwen.jpg') no-repeat top left;
+  background-size: 100% 100%;
+  position: relative;
+  overflow: hidden;
+  &__header {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 10vh;
+    background: url('../img/top_border.png') repeat-x;
+  }
+  &__content {
+    width: 80vw;
+    height: 80vh;
+    margin: 15vh auto;
+    &--title {
+      font-size: 5vw;
+      line-height: 1;
+      color: #FD361F;
+      text-align: center;
+    }
+    &--list {
+      width: 100%;
+      height: 50vh;
+      margin-top: 10vh;
+      ul {
+        display: flex;
+        flex-flow: row wrap;
+        li {
+          width: 50%;
+          font-size: 2vw;
+          margin-bottom: 3vh;
+          text-align: center;
+        }
+      }
+    }
+    &--btn {
+      width: 30vw;
+      height: 5vh;
+      line-height: 5vh;
+      border-radius: 15vw;
+      margin: 0 auto;
+      font-size: 3vw;
+      color: #FD361F;
+      border: 1px solid #FD361F;
+      text-align: center;
+    }
+  }
+  &__options {
+    position: absolute;
+    bottom: 2vh;
+    width: 100vw;
+    height: 5vh;
+    &--prize {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-end;
+      li {
+        height: 100%;
+        line-height: 5vh;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        padding-right: 5vw;
+        font-size: 3vw;
+        select {
+          height: 3vh;
+          margin: 1vh 0 0 1vh;
+        }
+        input {
+          width: 8vw;
+          height: 3vh;
+          margin: 1vh 0 0 1vh;
+        }
+      }
+    }
+  }
+  &__footer {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 2vh;
+    background: url('../img/langhua.png') repeat-x;
+    background-size: contain;
+  }
+}
