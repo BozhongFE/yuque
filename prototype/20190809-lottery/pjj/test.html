@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>年会抽奖</title>
+  <link rel="stylesheet/less" type="text/css" href="./css/index.less"/>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
+</head>
+<body>
+  <div class="prize-draw">
+    <header class="prize-draw__header"></header>
+    <div class="prize-draw__content">
+      <h2 class="prize-draw__content--title">开始抽奖<span id="JS_gift"><奖品></span></h2>
+      <div class="prize-draw__content--list">
+        <ul id="JS_lists">
+          <li>13427432535</li>
+          <li>13427432535</li>
+          <li>13427432535</li>
+          <li>13427432535</li>
+          <li>13427432535</li>
+          <li>13427432535</li>
+          <li>13427432535</li>
+          <li>13427432535</li>
+        </ul>
+      </div>
+      <div class="prize-draw__content--btn" id="JS_btn">开始抽奖</div>
+    </div>
+    <div class="prize-draw__options">
+      <ul class="prize-draw__options--prize">
+        <li>奖品：
+          <select id="JS_prize">
+            <option>选择奖品</option>
+            <option>奖品A</option>
+            <option>奖品B</option>
+            <option>奖品C</option>
+          </select>
+        </li>
+        <li>人数：
+          <input type="tel" id="JS_count" maxlength="1">
+        </li>
+      </ul>
+    </div>
+    <footer class="prize-draw__footer"></footer>
+  </div>
+</body>
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+const arr = [];
+const number = [13427432531, 13427432532, 13427432533, 13427432534, 13427432535, 13427432536, 13427432537, 13427432538, 13427432539];
+let config = false;
+let run = null;
+
+// 随机所有的code并且不重复
+const randowNum = (num) => {
+  let li = '';
+  for (let i = 0; i < number.length; i++) {
+    arr[i] = i;
+  }
+  arr.sort(() => 0.5 - Math.random());
+  for (let i = 0; i < num; i++) {
+    let index = arr[i];
+    li += '<li>' + number[index] + '</li>';
+  }
+  $('#JS_lists').html(li);
+};
+
+$('#JS_btn').click(() => {
+  if (!config) {
+    if ($('#JS_prize').val() === '选择奖品') {
+      alert('请选择奖品');
+      return;
+    } else if ($('#JS_count').val() === '') {
+      alert('请输入中奖人数');
+      return;
+    } else {
+      $('#JS_btn').html('抽奖中...');
+      $('#JS_gift').html('<' + $('#JS_prize').val() + '>');
+      config = true;
+      run = setInterval(() => {
+        randowNum($('#JS_count').val());
+      }, 30);
+    }
+  } else {
+    config = false;
+    clearInterval(run);
+    $('#JS_btn').html('开始抽奖');
+  }
+});
+</script>
+</html>
