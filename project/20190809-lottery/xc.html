@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>test</title>
+  <style>
+  .lottery-nums {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    background: -webkit-linear-gradient(bottom, #ff8bac, #ff8cdd);
+  }
+  .lottery-num {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 40px;
+    margin: 0 2px;
+    background-color: #fff;
+    color: #333;
+    font-size: 20px;
+    box-shadow: 0 0 2px 2px #fdfdfd;
+  }
+  .lottery-num__text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .lottery-nums__btn {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    width: 40px;
+    height: 20px;
+    border-radius: 5px;
+    color: #ff8bac;
+    background-color: #ffff;
+    box-shadow: 0 0 2px 2px #fdfdfd;
+    text-decoration: none;
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+  <main class="lottery">
+    <div class="lottery-nums">
+      <div class="lottery-num" v-for="(i, index) in arr" :key="index">
+        <span class="lottery-num__text" v-if="current >= index">{{i}}</span>
+        <span class="lottery-num__text" v-else>{{num}}</span>
+      </div>
+      <a href="javascript:" class="lottery-nums__btn" @click="lottery" v-if="all.length">开始</a>
+    </div>
+    <ul class="lottery-list">
+      <li>可抽奖名单</li>
+      <li v-for="i in all">{{i}}</li>
+    </ul>
+    <ul class="lottery-list">
+      <li>已中奖名单</li>
+      <li v-for="i in phone">{{i}}</li>
+    </ul>
+  </main>
+  <script src="https://scdn.bozhong.com/source/common/js/vue/2.3.3/vue.min.js"></script>
+  <script>
+    var all = [
+      '19232323444',
+      '18973838888',
+      '17343594949',
+      '17544448484',
+      '14859600005',
+      '15343439545',
+      '12443254353',
+      '15454646464',
+      '16455452233',
+      '19239343444',
+    ];
+
+    new Vue({
+      el: '.lottery',
+      data: {
+        all: all,
+        phone: [],
+        current: 0,
+        num: 0,
+        sub: true,
+      },
+      watch: {
+        arr: {
+          handler: function(v) {
+            if (v && v.length) this.round();
+          },
+          immediate: true,
+          deep: true,
+        },
+      },
+      computed: {
+        arr: function() {
+          var num = this.phone[0];
+          if (!num) return [];
+
+          return String(num).split('');
+        },
+      },
+      methods: {
+        round: function() {
+          var self = this;
+          self.current = 0;
+          var time = 40;
+          function step() {
+            if (self.num >= 9) {
+              self.num = 0;
+            } else {
+              self.num += 1;
+            }
+            time -= 1;
+            if (time === 0) {
+              self.current += 1;
+              time = 40 + self.current;
+              if (self.current < self.arr.length - 1) return window.requestAnimationFrame(step);
+              self.sub = true;
+            } else {
+              window.requestAnimationFrame(step);
+            }
+          };
+          window.requestAnimationFrame(step);
+        },
+        lottery: function() {
+          var self = this;
+          if (!self.sub) return false;
+          self.sub = false;
+
+          self.phone.push(all.splice(Math.floor(Math.random()*all.length), 1)[0]);
+        }
+      },
+    })
+  </script>
+</body>
+</html>
