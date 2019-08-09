@@ -189,13 +189,13 @@
     const prizeEnd = function () {
       // 中奖信息叠加进去
       const winnerHtml = winner.innerHTML;
-      winnerName.innerHTML = '恭喜'+phoneList[current]+'抽中了<br>'+prize[curPrize].name;
-      winner.innerHTML =  '<p>'+prize[curPrize].name + ':' + phoneList[current]+'</p>' + winnerHtml;
+      winnerName.innerHTML = '恭喜'+phoneList[current-1]+'抽中了<br>'+prize[curPrize].name;
+      winner.innerHTML =  '<p>'+prize[curPrize].name + ':' + phoneList[current-1]+'</p>' + winnerHtml;
       // 踢除中奖者并记录到本地
       list = window.localStorage.getItem('winnerList') ?  JSON.parse(window.localStorage.getItem('winnerList')) : {};
-      list[phoneList[current]] = 1;
+      list[phoneList[current-1]] = 1;
       window.localStorage.setItem('winnerList', JSON.stringify(list));   
-      phoneList.splice(current, 1);
+      phoneList.splice(current-1, 1);
 
       // 奖品池对应减少
       if (prize[curPrize].num > 1) {
