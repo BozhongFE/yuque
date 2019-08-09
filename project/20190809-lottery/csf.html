@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no" />
+  <meta charset="utf-8">
+  <title>手机号抽奖</title>
+  <style>
+      *,ul,li{
+        padding: 0;
+        margin: 0;
+      }
+      li {
+        list-style: none;
+      }
+      body,html {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-size: 16px;
+        background: #FFFAEF;
+        color: #333;
+        text-align: center;
+      }
+      body::after {
+        content: "";
+        height: 100%;
+        width: 1px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .lucky-box {
+        display: inline-block;
+        vertical-align: middle;
+        width: 80%;
+        margin-bottom: 100px;
+      }
+      .lucky-number {
+        border-top:3px solid #fbd175;
+        border-bottom:3px solid #fbd175;
+        padding: 40px 0;
+        color: #fdae00;
+        position: relative;
+        width: 80%;
+        margin: 0 auto 100px;
+        background: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        font-size: 28px;
+      }
+      .btn-start , .btn-stop {
+         border-radius: 10px;
+         border:1px solid #b92727;
+         background: #ae0e0e;
+         color: #fff;
+         padding: 10px 20px;
+         margin: 0 auto;
+         width: 60px;
+         text-align: center;
+         cursor: pointer;
+         display: inline-block;
+         margin: 0 20px;
+      }
+      .btn-start:hover {
+        background: #b92121;
+      }
+      .btn-stop {
+        background:#5fbcd2;
+        border-color: #329cb5;
+      }
+      .btn-stop:hover {
+        background: #69c8de;
+      }
+      .btn-active {
+        pointer-events: none;
+      }
+      .winner-list {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        height: 100px;
+        width: 100%;
+        border-top: 2px dashed #fdae00;
+        background:#f7f0e1;
+        font-size: 14px;
+        color: #fdae00;
+        line-height: 2;
+      }
+      .winner-list::after {
+        content: "中奖名单";
+        position: fixed;
+        left: 50%;
+        bottom: 100px;
+        transform: translateX(-50%);
+        width: 200px;
+        background: #fdae00;
+        color: #fff;
+        border-radius:  20px 20px 0 0;
+        padding: 5px 0;
+        font-weight: bold;
+      }
+      .winner-list p:last-child {
+        border: 0;
+      }
+      .winner-name {
+        position: fixed;
+        top: 50px;
+        left: 50%;
+        transform: translate(-50%);
+        /* animation: fontSize 0.5s linear infinite alternate; */
+        font-size: 40px;
+        color: #fdae00;
+        text-align: center;
+        line-height: 2;
+      }
+      @keyframes fontSize {
+        0% {font-size: 20px}
+        100% {font-size: 40px}
+      }
+  </style>
+</head>
+<body>
+  <div class="winner-name"></div>
+  <div class="winner-list"></div>
+
+  <main class="lucky-box">
+    <div class="lucky-number">准备开始吗</div>
+    <span class="btn-start">开始</span>
+    <span class="btn-stop">停止</span>
+  </main>
+<script>
+  window.onload = function () {
+    // 参加号码
+    let phoneList = ['13216513121', '15213131213','13313151214','13213131215','13213131216','13213131217','13213131218','13613831218','13813831218','15613831218','17666621321'];
+    // 奖品池 
+    const prize = [{
+      name: '一等奖',
+      num: 1
+    },{
+      name: '二等奖',
+      num: 2
+    }]
+    const len = phoneList.length;
+    const winner = document.querySelector('.winner-list');
+    const winnerName = document.querySelector('.winner-name');
+    const lucky = document.querySelector('.lucky-number');
+    const start = document.querySelector('.btn-start');
+    const stop = document.querySelector('.btn-stop');
+    let curPrize = prize.length - 1;
+    let current = 0; 
+    let activeAuto = '';
+    let localWinner = window.localStorage.getItem('winnerList') || null; 
+
+    // 查询参与号码是否已抽中
+    if (localWinner) {
+      const lastArr = [];
+      localWinner = JSON.parse(window.localStorage.getItem('winnerList'));
+      for (let i = 0 ; i < phoneList.length; i += 1) {
+        if (!localWinner[phoneList[i]]) {
+          lastArr.push(phoneList[i]);
+        }
+      }
+      phoneList = lastArr;
+    }
+
+    if (phoneList.length <= 1) lucky.innerText = '活动结束';
+
+    // 替换号码
+    const active = function () {
+      if (current >= phoneList.length - 1) current = 0;
+      if (current === 0) {
+        phoneList = shuffle(phoneList);
+      }
+      lucky.innerText = phoneList[current];
+      current += 1;
+    }
+
+    // 打乱参与号码的数组
+    const shuffle = function (arr) {
+      const len = arr.length;
+      for (let i = 0; i < len - 1; i++) {
+          let index = parseInt(Math.random() * (len - i));
+          let temp = arr[index];
+          arr[index] = arr[len - i - 1];
+          arr[len - i - 1] = temp;
+      }
+      return arr;
+    }    
+    // 抽中者踢除参并记录到本地
+    const prizeEnd = function () {
+      // 中奖信息叠加进去
+      const winnerHtml = winner.innerHTML;
+      winnerName.innerHTML = '恭喜'+phoneList[current]+'抽中了<br>'+prize[curPrize].name;
+      winner.innerHTML =  '<p>'+prize[curPrize].name + ':' + phoneList[current]+'</p>' + winnerHtml;
+      // 踢除中奖者并记录到本地
+      list = window.localStorage.getItem('winnerList') ?  JSON.parse(window.localStorage.getItem('winnerList')) : {};
+      list[phoneList[current]] = 1;
+      window.localStorage.setItem('winnerList', JSON.stringify(list));   
+      phoneList.splice(current, 1);
+
+      // 奖品池对应减少
+      if (prize[curPrize].num > 1) {
+        prize[curPrize].num = prize[curPrize].num - 1;
+      } else {
+        prize.splice(curPrize, 1);
+        curPrize = prize.length - 1;
+        if(!prize.length || phoneList.length <= 1) lucky.innerText = '活动结束';
+      }
+    }
+    // 开始按钮
+    start.onclick = function () {
+      if (!prize.length || phoneList.length <= 1) return false;
+      start.className = 'btn-start btn-active';
+      stop.className = 'btn-stop';
+      winnerName.innerText = '';
+      activeAuto = setInterval(() => {
+        active();
+      }, 20);
+    }
+    // 停止按钮
+    stop.onclick = function () {
+      if (!prize.length || phoneList.length <= 1) return false;
+      start.className = 'btn-start';
+      stop.className = 'btn-stop  btn-active';
+      clearInterval(activeAuto);
+      prizeEnd();
+    }
+  }
+</script>
+</html>
