@@ -1,0 +1,8 @@
+{
+  "name": "readproject",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "readproject": "bin/readproject"
+  }
+}
