@@ -1,0 +1,20 @@
+{
+  "name": "readproject",
+  "version": "1.0.0",
+  "description": "readproject",
+  "main": "index.js",
+  "bin": {
+    "readproject": "bin/readproject.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "readproject"
+  ],
+  "author": "Takashi",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^3.0.1"
+  }
+}
