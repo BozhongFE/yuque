@@ -1,0 +1,8 @@
+{
+  "name": "xcli",
+  "description": "抓取数据",
+  "version": "0.1.0",
+  "bin": {
+    "xcli": "bin/xcli.js"
+  }
+}
