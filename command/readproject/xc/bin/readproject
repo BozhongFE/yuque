@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+const Fs = require('fs');
+const Path = require('path');
+const Program = require('commander');
+
+Program
+  // 外部可传入文件夹路径
+  .option('-p, --path <path>', 'Which directory to use')
+  // 解析参数
+  .parse(process.argv);
+
+// 默认指向当前文件夹
+const dir = Program.path ? Path.resolve(Program.path) : process.cwd();
+
+// 存放项目
+const projects = [];
+
+// 查找某dir及dir子文件夹的文件列表
+const readFileList = (dir, path = '') => {
+  findpkg(dir, path, () => {
+    // 当前dir没有package.json，遍历列表
+    const files = Fs.readdirSync(dir);
+    if (!files.length) return false;
+    files.forEach((item) => {
+      const fullPath = Path.join(dir, item);
+      const stat = Fs.statSync(fullPath);
+      if (stat.isDirectory()) {
+        path += path ? `/${item}` : item;
+        readFileList(fullPath, path);
+      }
+    })
+  })
+};
+
+// 查找某dir下的package.json
+const findpkg = (dir, path, errorCallback) => {
+  const fullPath = Path.join(dir, 'package.json');
+  const exists = Fs.existsSync(fullPath);
+  if (!exists) return errorCallback && errorCallback();
+  // 项目配置
+  const pkg = JSON.parse(Fs.readFileSync(fullPath));
+  projects.push({
+    name: pkg.name,
+    description: pkg.description,
+    path: path || './', 
+  });
+}
+
+readFileList(dir);
+
+// 最后生成的json文件内容
+const content = JSON.stringify({
+  directory: dir,
+  date: Date(),
+  projects,
+}, null, '\t');
+
+Fs.writeFile(Path.join(dir, 'projects.json'), content, (err) => {
+  if (err) throw err;
+  return console.log('Read project successfully');
+});
+
+

@@ -1,0 +1,10 @@
+{
+  "name": "readproject",
+  "version": "0.1.0",
+  "bin": {
+    "readproject": "bin/readproject"
+  },
+  "dependencies": {
+    "commander": "^3.0.1"
+  }
+}
