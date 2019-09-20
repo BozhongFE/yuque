@@ -25,8 +25,7 @@ const readFileList = (dir, path = '') => {
       const fullPath = Path.join(dir, item);
       const stat = Fs.statSync(fullPath);
       if (stat.isDirectory()) {
-        path += path ? `/${item}` : item;
-        readFileList(fullPath, path);
+        readFileList(fullPath, path ? path + `/${item}` : item);
       }
     })
   })
