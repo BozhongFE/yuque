@@ -1,8 +1,13 @@
 {
   "name": "readproject",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "bin": {
     "readproject": "bin/readproject"
+  },
+  "dependencies": {
+    "commander": "^3.0.1",
+    "fs-extra": "^8.1.0",
+    "globby": "^10.0.1"
   }
 }

@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+const program = require('commander')
+const globby = require('globby')
+const fs = require('fs-extra')
+const pkg = require('../package.json')
+
+program
+  .version(pkg.version, '-v, --version')
+  .option('--node_modules', 'read node_modules')
+  .description('从当前目录找出所有项目')
+  .parse(process.argv)
+
+;(async () => {
+  console.time()
+  const options = {
+    ignore: []
+  }
+  if (!program.node_modules) options.ignore.push('**/node_modules/**')
+
+  const paths = await globby(['**/package.json'], options)
+  const json = {
+    directory: process.cwd(),
+    date: new Date(),
+    projects: [],
+    error: [],
+  }
+  for (const item of paths) {
+    try {
+      const pkg = fs.readJSONSync(item)
+      json.projects.push({
+        name: pkg.name,
+        description: pkg.description,
+        path: item.replace('/package.json', '')
+      })
+    } catch (err) {
+      json.error.push(item)
+    }
+  }
+  fs.writeJsonSync('./projects.json', json, {
+    spaces: '\t',
+    EOL: '\n'
+  })
+  console.timeEnd();
+  console.log('Read project successfully')
+})()
