@@ -66,6 +66,16 @@ const tool = {
     else if (bytes / 1024 < 1024) return `${(bytes / 1024).toFixed(2)} KB`;
     else return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
   },
+  /**
+   * 比较两个值
+   */
+  check(val1, val2, type) {
+    if (type === 'object' || type === 'array') {
+      if (JSON.stringify(val1) !== JSON.stringify(val2)) console.error(`error: ${val1} ${val2}`);
+    } else {
+      if (val1 !== val2) console.error(`error: ${val1} ${val2}`);
+    }
+  },
 };
 
 module.exports = tool;
