@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <title>vue-design</title>
+  <script>
+    // rem
+    // (function(scope){
+    //   // 下面750对应设计稿的宽度
+    //   // document.body.innerHTML = window.innerWidth;
+    //   var ua = navigator.userAgent.toLocaleLowerCase();
+    //   var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+    //   var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+    //   // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+    //   var loop = function() {
+    //     var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+    //     var docWidth = window.innerWidth;
+    //     // 宽度获取不成功延时执行
+    //     if (!winWidth && !docWidth) return setTimeout(function() {
+    //       loop();
+    //     }, 100);
+    //     var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+    //     document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+    //     scope.addEventListener(eventName, function(){
+    //       clearTimeout(scope.orientationChangedTimeout);
+    //       scope.orientationChangedTimeout = setTimeout(function(){
+    //         document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+    //       }, howLong);
+    //     }, false);
+    //   };
+    //   loop();
+    // }(window));
+  </script>
+  <script>
+    var domain = location.host.split('.').slice(1).join('.');
+    var sourceDomain = location.protocol + '//source.' + domain; // bottom loadScript used
+    var projectFullPath = sourceDomain + '/design'; // main.js used
+    var localDev = location.pathname.match(/^\/[a-zA-Z]+[0-9]{2,5}/);
+    if (localDev) {
+      sourceDomain = location.origin + localDev[0] + '/';
+      projectFullPath = location.origin + location.pathname;
+    }
+  </script>
+  
+  <!--  -->
+</head>
+<body>
+  <div id="app">
+  </div>
+  <!-- <script src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script> -->
+  <script>
+    var env = 'product';
+    // 异步加载脚本，全部加载后完成回调
+    function loadScript (files, queueIndex, callback) {
+      queueIndex = queueIndex || 0;
+      if (files[queueIndex]) {
+        var script = document.createElement('script');
+        script.src = files[queueIndex];
+        document.body.appendChild(script);
+        script.onload = function () {
+          loadScript(files, queueIndex + 1, callback);
+        };
+      } else if (callback) {
+        callback();
+      }
+    }
+  </script>
+  
+  <script type="text/javascript">
+    var files = ["/design/manifest.js?dad068395c1bb971ee4e","/design/vendor.js?211ba7679270b0b66b37","/design/main.js?bae701c306b4f9cfdc24"];
+    for (var i = 0; i < files.length; i += 1) {
+      files[i] = sourceDomain + files[i];
+    }
+    loadScript(files);
+  </script>
+  
+
+  <!-- <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?xxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script> -->
+</body>
+</html>
