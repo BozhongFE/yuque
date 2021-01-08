@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html LANG="zh-Hans">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"  viewport-fit=cover/>
+    <script src="https://source.bozhong.com/common/js/vconsole.min.js"></script>
+    <script>
+    // new VConsole();
+    (function(scope){
+        // 下面750对应设计稿的宽度
+        // document.body.innerHTML = window.innerWidth;
+        var ua = navigator.userAgent.toLocaleLowerCase();
+        var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+        var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+        // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+        var loop = function() {
+          var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+          var docWidth = window.innerWidth;
+          // 宽度获取不成功延时执行
+          if (!winWidth && !docWidth) return setTimeout(function() {
+            loop();
+          }, 100);
+          var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+          document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+          scope.addEventListener(eventName, function(){
+            clearTimeout(scope.orientationChangedTimeout);
+            scope.orientationChangedTimeout = setTimeout(function(){
+              document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+            }, howLong);
+          }, false);
+        };
+        loop();
+      }(window));
+    </script>
+    <style>
+        body {
+            background-color: #e3e3e3;
+        }
+        .tab {
+            margin: 10px;
+            font-size: 14px;
+        }
+        .tab span {
+            padding: 5px 15px;
+            border-radius: 20px;
+            border:1px solid #ddd;
+            margin:  15px 5px;
+            display: inline-block;
+            background-color: #f3f3f3;
+        }
+        .tab span.current {
+            background-color: #fff;
+        }
+        .tab-main {
+            height: 0;
+            overflow: hidden;
+            transition: 1s all;
+            opacity: 0;
+        }
+        .show {
+            height: auto;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="tab"></div>
+
+   <script>
+    const tabData =  [{
+           name: '意见反馈',
+           main: '意见反馈意见反馈意见反馈意见反馈意见反馈意见反馈',
+       },{
+           name: '这是五个字',
+           main: '这是五个字这是五个字这是五个字这是五个字这是五个字',
+       },{
+           name: '哈',
+           main: '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈',
+       },{
+           name: '是吗',
+           main: '是吗是吗是吗是吗是吗是吗是吗是吗是吗是吗',
+       },{
+           name: '很长很长很长的很长很长很长的很长很长很长的很长很长很长的',
+           main: '很长很长很长的很长很长很长的很长很长很长的很长很长很长的很长很长很长的很长很长很长的很长很长很长的很长很长很长的',
+       },{
+           name: '一般长一般长一般长一般长一般长',
+           main: '一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长一般长',
+       },{
+           name: '三个字',
+           main: '三个字三个字三个字三个字三个字三个字',
+       },{
+           name: '这是五个字',
+           main: '这是五个字这是五个字这是五个字这是五个字这是五个字',
+       },{
+           name: '是吗',
+           main: '是吗是吗是吗是吗是吗是吗是吗是吗是吗是吗',
+       },{
+           name: '类',
+           main: '是吗类类是吗是吗是吗是吗是吗是吗是吗是吗是吗',
+       },{
+           name: '45644456556',
+           main: '是吗类类是吗是吗是吗是吗是吗是吗是吗是吗是吗',
+       }
+    ];
+    // 随机
+    tabData.sort(function(){
+        return Math.random() - 0.5;
+    });
+
+    let html = "";
+    const $tab = document.querySelector('.tab');
+    // 获取总宽度
+    const totalW = $tab.clientWidth;
+    // 当前长度
+    let curW = 0;
+    let target = 0;
+
+    // 记录当前选中
+    let prevIndex = null;
+
+    const lenNum = (str) => (str * 14) + 42;
+
+    for (let i = 0; i < tabData.length; i += 1) {
+        // 计算字符长度
+        const len = tabData[i].name.length;
+        curW += lenNum(len);
+        const nextWordLen = !!tabData[i + 1] ? lenNum(tabData[i + 1].name.length) : 0;
+        html += `<span data-idx="${i}" data-target="${target}">${tabData[i].name}</span>`;
+        tabData[i].target = target;
+        if (curW > totalW || (!!tabData[i + 1] && curW + nextWordLen > totalW) || i === tabData.length - 1) {
+           html += `<div class="tab-main" id="main${target}"></div>`;
+           curW = 0;
+           target += 1;
+        }
+    }
+
+    $tab.innerHTML = html;
+
+    const show = function(e) {
+        // 取当前索引 data-idx
+        const index = e.target.attributes[0].nodeValue;
+        // 取需要显示内容的索引 data-target
+        const targetValue = Number(e.target.attributes[1].nodeValue);
+        // 获取节点
+        const $item = $tab.querySelectorAll('span')[index];
+        const $target = $tab.querySelectorAll('.tab-main')[targetValue];
+        //判断事件触发是否同一个节点
+        if (prevIndex != index) {
+            if (prevIndex != null) {
+                $tab.querySelectorAll('span')[prevIndex].className = '';
+                console.log(tabData[prevIndex].target)
+                $tab.querySelectorAll('.tab-main')[tabData[prevIndex].target].className = 'tab-main';
+            }
+            $item.className = 'current';
+            $target.innerHTML = `<h2>${tabData[index].name}</h2> <p>${tabData[index].main}</p>`;
+            $target.className = `tab-main show`;
+        } else {
+            $item.className = $item.getAttribute('class')  === 'current' ? '' : 'current';
+            $target.className = /show/.test($target.getAttribute('class')) ? 'tab-main' :  `tab-main show`;
+        }
+        prevIndex = index;
+    }
+
+    $tab.addEventListener('click', show, false);
+   </script>
+</body>
+</html>
