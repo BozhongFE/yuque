@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet/less" href="./css/style-animate.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+    <script>
+      // rem
+      (function(scope){
+        // 下面750对应设计稿的宽度
+        // document.body.innerHTML = window.innerWidth;
+        var ua = navigator.userAgent.toLocaleLowerCase();
+        var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+        var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+        // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+        var loop = function() {
+          var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+          var docWidth = window.innerWidth;
+          // 宽度获取不成功延时执行
+          if (!winWidth && !docWidth) return setTimeout(function() {
+            loop();
+          }, 100);
+          var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+          document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+          scope.addEventListener(eventName, function(){
+            clearTimeout(scope.orientationChangedTimeout);
+            scope.orientationChangedTimeout = setTimeout(function(){
+              document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+            }, howLong);
+          }, false);
+        };
+        loop();
+      }(window));
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const listData = (() => {
+        const title = ['没问题', '有问题的', '没', '有', '并没有', '绝对有问题', '瞎说'];
+        const template = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
+        const content = [
+          template,
+          template + template,
+          template + template + template,
+          template + template + template + template,
+          template + template + template + template + template,
+          template + template + template + template + template + template,
+          template + template + template + template + template + template + template,
+          template + template + template + template + template + template + template + template,
+        ];
+        return Array.from({ length: 15 }).map((v, i) => {
+          return {
+            id: i + 1,
+            title: title[Math.floor(Math.random() * 6)],
+            content: `No.${i} ${content[Math.floor(Math.random() * content.length - 1)]}`,
+          }
+        })
+      })();
+      function App() {
+        const { useState, useEffect, useRef } = React;
+        const [list, setList] = useState(listData);
+        const [activeIndex, setActiveIndex] = useState(-1);
+        const [lastActiveIndex, setLastActiveIndex] = useState(-1);
+        // animate:start
+        const listRef = useRef(null);
+        const [contentInfo, setContentInfo] = useState([]);
+        useEffect(() => {
+          const dom = listRef.current.children;
+          let top = 0;
+          let level = 0;
+          setContentInfo(list.map((item, index) => {
+            if (dom[index].offsetTop !== top) {
+              top = dom[index].offsetTop;
+              level += 1;
+            }
+            return {
+              height: dom[index].children[1].offsetHeight,
+              level: level,
+            };
+          }));
+        }, []);
+        // animate:end
+        return (
+<ul className='tab-list' ref={listRef}>
+  {list.map((item, index) => {
+    // 同级别全部预设高度
+    const attr = {};
+    const activeInfo = contentInfo[activeIndex];
+    if (contentInfo.length > 0 && contentInfo[activeIndex]?.level === contentInfo[index].level) {
+      attr.height = activeInfo.height;
+    }
+    // 复合类名
+    let className = `tab-item`;
+    className += (index === activeIndex ? ' active' : '');
+    // 等待后，采集内容高度
+    className += (contentInfo.length === 0 ? ' height-loading' : ' height-loaded');
+    // 关闭tab时，保留关闭动画
+    className += (index === lastActiveIndex && activeIndex === -1 ? ' un-active' : '');
+    return (
+      <React.Fragment key={index}>   
+        <li onClick={() => { setLastActiveIndex(activeIndex); setActiveIndex(index === activeIndex ? -1 : index)}} className={className}>
+          <a>{item.title}</a>
+          <div className='tab-item__content' style={attr}>
+            <div className='tab-item__content-frontend' style={attr}>
+              <h4>{item.title}</h4>
+              <p>{item.content}</p>
+            </div>
+            <div className='tab-item__content-backend'>
+              <h4>{item.title}</h4>
+              <p>{item.content}</p>
+            </div>
+          </div>
+        </li>
+      </React.Fragment>
+    );
+  })}
+</ul>
+        );
+      }
+      
+      ReactDOM.render(
+        <App></App>,
+        document.getElementById('root')
+      );
+
+    </script>
+  </body>
+</html>

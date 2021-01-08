@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet/less" href="./css/style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+    <script>
+      // rem
+      (function(scope){
+        // 下面750对应设计稿的宽度
+        // document.body.innerHTML = window.innerWidth;
+        var ua = navigator.userAgent.toLocaleLowerCase();
+        var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+        var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+        // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+        var loop = function() {
+          var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+          var docWidth = window.innerWidth;
+          // 宽度获取不成功延时执行
+          if (!winWidth && !docWidth) return setTimeout(function() {
+            loop();
+          }, 100);
+          var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+          document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+          scope.addEventListener(eventName, function(){
+            clearTimeout(scope.orientationChangedTimeout);
+            scope.orientationChangedTimeout = setTimeout(function(){
+              document.documentElement.style.fontSize = (_width / 750 * 40) + 'px';
+            }, howLong);
+          }, false);
+        };
+        loop();
+      }(window));
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const listData = (() => {
+        const title = ['没问题', '有问题的', '没', '有', '并没有', '绝对有问题', '瞎说'];
+        const content = [
+          'Lorem ipsum dolor sit amet',
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        ];
+        return Array.from({ length: 15 }).map((v, i) => {
+          return {
+            id: i + 1,
+            title: title[Math.floor(Math.random() * 6)],
+            content: `No.${i} ${content[Math.floor(Math.random() * 3)]}`,
+          }
+        })
+      })();
+      function App() {
+        const { useState } = React;
+        const [list] = useState(listData);
+        const [activeIndex, setActiveIndex] = useState(-1);
+        return (
+<ul className='tab-list'>
+  {list.map((item, index) => (
+    <React.Fragment key={index}>   
+      <li onClick={() => setActiveIndex(activeIndex === index ? -1 : index)} className={`tab-item ${activeIndex === index ? 'active' : ''}`}>
+        <a>{item.title}</a>
+        <div className='tab-item__content'>
+          <div className='tab-item__content-frontend'>
+            <h4>{item.title}</h4>
+            <p>{item.content}</p>
+          </div>
+          <div className='tab-item__content-backend'>
+            <h4>{item.title}</h4>
+            <p>{item.content}</p>
+          </div>
+        </div>
+      </li>
+    </React.Fragment>
+  ))}
+</ul>
+        );
+      }
+      
+      ReactDOM.render(
+        <App></App>,
+        document.getElementById('root')
+      );
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+@rem: 1 / 40rem;
+body, ul, h4, p {
+  margin: 0;
+}
+body {
+  background-color: #161616;
+  color: #fff;
+  font-size: 13px;
+}
+ul {
+  padding: 0;
+}
+li {
+  list-style: none;
+}
+.tab {
+  &-list {
+    position: relative;
+    display: flex;
+    padding: 30 * @rem 0 0 20 * @rem;
+    flex-wrap: wrap;
+  }
+  &-item {
+    margin: 0 20 * @rem 20 * @rem 0;
+    a {
+      display: inline-flex;
+      box-sizing: border-box;
+      padding: 0 30 * @rem;
+      height: 72 * @rem;
+      line-height: 72 * @rem;
+      border: 1px solid #3b3b3b;
+      border-radius: 72 * @rem;
+    }
+    
+    &.active {
+      a {
+        background-color: #37d11e;
+      }
+    }
+    &.active &__content {
+      display: block;
+    }
+    &__content {
+      display: none;
+      max-width: 1px;
+      &-frontend {
+        position: absolute;
+        left: 0;
+        box-sizing: border-box;
+        width: 750 * @rem;
+        padding: 10 * @rem 30 * @rem;
+      }
+      &-backend {
+        visibility: hidden;
+        color: transparent;
+        box-sizing: border-box;
+        width: 710 * @rem;
+        padding: 10 * @rem;
+      }
+      h4 {
+        padding: 20 * @rem 0;
+      }
+      p {
+        color: #aaa;
+      }
+    }
+    // animate:start
+    &.height-loading &__content {
+      display: block;
+      position: absolute;
+      top: -999999px;
+      left: -999999px;
+    }
+    &.height-loaded &__content {
+      display: block;
+      height: 0;
+      overflow: hidden;
+      transition: height 0.3s;
+      visibility: hidden;
+    }
+    &.height-loaded &__content-frontend {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.3s;
+    }
+    &.active &__content {
+      visibility: visible;
+    }
+    &.un-active &__content {
+      visibility: visible;
+    }
+    &__content {
+      // visibility: hidden;
+    }
+    // animate:end
+  }
+}
