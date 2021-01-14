@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/vue/2.6.8/vue.min.js"></script>
+  <style>
+    * {margin: 0; padding: 0;}
+    ul, li {list-style: none;}
+    .list {display: flex; flex-wrap: wrap; box-sizing: border-box; font-size: 14px;}
+    .item {display: flex; flex-direction: column;}
+    .item.active { background-color: greenyellow; color: #fff;}
+    .title { padding: 5px; border-radius: 5px; border: 1px solid #000;}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="list" v-for="(list, index) in data" :key="index">
+      <div
+        v-for="item in list"
+        :key="item.id"
+        :class="['item', {'active': item.id === activeInfo.info.id}]"
+        @click="clickTab(index, item)">
+        <span class="title">{{item.title}}</span>
+      </div>
+      <div class="content" v-if="index === activeInfo.row">
+        <p>{{activeInfo.info.title}}</p>
+        <p>{{activeInfo.info.content}}</p>
+      </div>
+    </div>
+  </div>
+  <script>
+  const list = (() => {
+    const title = ['没问题', '有问题的', '没', '有', '并没有', '绝对有问题', '瞎说'];
+    return Array.from({ length: 9 }).map((v, i) => {
+      return {
+        id: i + 1,
+        title: title[Math.floor(Math.random() * 6)],
+        content: `No.${i} Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      }
+    })
+  })();
+
+  const winWidth = document.documentElement.clientWidth;
+  const vm = new Vue({
+    el: '#app',
+    data: {
+      data: [],
+      activeInfo: {
+        row: null,
+        info: {}
+      }
+    },
+    methods: {
+      clickTab(row, info) {
+        this.activeInfo.row = row;
+        this.activeInfo.info = info;
+      },
+      setData() {
+        const data = this.data;
+
+        const prefixWidths = list
+          .map(item => item.title.length * 14 + 12)
+          .reduce((result, width, i) => {
+            result[i] = i > 0 ? width + result[i - 1] : width;
+            return result;
+          }, []);
+
+        let i = 0;
+        let j = i;
+        while(i < prefixWidths.length) {
+          if (prefixWidths[j] <  winWidth * (data.length + 1)) {
+            j += 1;
+          } else {
+            data.push(list.slice(i, j));
+            i = j;
+          }
+        }
+
+        this.data = data;
+      }
+    },
+    mounted() {
+      this.setData();
+    }
+  });
+  </script>
+</body>
+</html>
