@@ -1,0 +1,72 @@
+@import '~src/assets/less/unit.less';
+@import '~src/assets/less/fn.less';
+
+.home-faq {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10*@unit 6*@unit 6*@unit;
+}
+.home-faq__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36*@unit;
+  padding: 0 14*@unit;
+  margin: 0 4*@unit 10*@unit;
+  border-radius: 36*@unit;
+  box-sizing: border-box;
+  overflow: hidden;
+  &:before {
+    .borderBox(1);
+    border-color: #303030;
+    border-radius: 72*@unit;
+  }
+  &.active {
+    color: #fff;
+    background-color: #3BCF08;
+    &:before {
+      border: none;
+    }
+  }
+}
+@keyframes showContent {
+  form { 
+    transform: translateY(-60%);
+  } 
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes showBox {
+  0% { 
+    height: 0;
+  }
+  100% {
+    height: auto;
+  }
+}
+
+.home-faq__contentBox {
+  // height: 0;
+  width: 100%;
+  color: #999;
+  overflow: hidden;
+  &.active {
+    // animation: showBox 0.4s ease-in-out 0.1s 1 forwards;
+  }
+}
+.home-faq__content {
+  width: 100%;
+  padding: 2*@unit 15*@unit 10*@unit;
+  transform: translateY(-80%);
+  transform-origin: center top;
+  animation: showContent 0.1s ease-in-out 0.1s 1 forwards;
+  box-sizing: border-box;
+}
+.home-faq__content-title {
+  margin-bottom: 8*@unit;
+  font-size: 16*@unit;
+  line-height: 22.4*@unit;
+  color: #fff;
+}

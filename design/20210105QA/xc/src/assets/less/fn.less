@@ -1,0 +1,86 @@
+
+// 超出省略号
+.ellipsis(@n: 1, @ellipsis: ellipsis) {
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: @ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: @n;
+}
+
+// 填充父容器
+.fullBox() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// 边框 (正常情况下不直接调用)
+.border (@size: 1, @color: @colorBorder, @type: solid) {
+  content: '';
+  position: absolute;
+  border: @size * @unit @type @color;
+  box-sizing: border-box;
+}
+
+// 全包围边框, 默认0.5，单位px
+// 参数 边尺寸, 颜色, border类型
+.borderBox(@size: 0.5, @color: @colorBorder, @type: solid) {
+  top: 0;
+  left: 0;
+  width: 400%;
+  height: 400%;
+  transform: scale(.25);
+  transform-origin: 0 0;
+  .border(@size * 4, @color, @type);
+}
+
+// 顶部边框, 默认0.5，单位px
+// 参数 边高度, 颜色, border类型
+.borderTop(@size: 0.5, @color: @colorBorder, @type: solid) {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  transform: scaleY(.25);
+  transform-origin: 0 top;
+  .border(@size * 4, @color, @type);
+}
+
+// 底部边框, 默认0.5，单位px
+// 参数 边高度, 颜色, border类型
+.borderBottom(@size: 0.5, @color: @colorBorder, @type: solid) {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  transform: scaleY(.25);
+  transform-origin: 0 bottom;
+  .border(@size * 4, @color, @type);
+}
+
+// 左边边框, 默认0.5，单位px
+// 参数 边宽度, 颜色, border类型
+.borderLeft(@size: 0.5, @color: @colorBorder, @type: solid) {
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  transform: scaleX(.25);
+  transform-origin: 0 0;
+  .border(@size * 4, @color, @type);
+}
+// 右边边框, 默认0.5，单位px
+// 参数 边宽度, 颜色, border类型
+.borderRight(@size: 0.5, @color: @colorBorder, @type: solid) {
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 100%;
+  transform: scaleX(.25);
+  transform-origin: right 0;
+  .border(@size * 4, @color, @type);
+}

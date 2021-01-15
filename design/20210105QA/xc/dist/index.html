@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"/><title></title><script>(function(scope){
+        // 下面375对应设计稿的宽度
+        // document.body.innerHTML = window.innerWidth;
+        var ua = navigator.userAgent.toLocaleLowerCase();
+        var eventName = 'onorientationchange' in scope ? 'orientationchange' : 'resize';
+        var howLong = /chrome|firefox|ucbrowser|mqqbrowser/.test(ua) || (/safari/.test(ua) && /iphone/.test(ua)) ? 0 : 300;
+        // app打开浏览窗体时可能第一时间无法获取浏览器宽度, 需循环
+        var loop = function() {
+          var winWidth = document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : (window.screen ? window.screen.width : 0);
+          var docWidth = window.innerWidth;
+          // 宽度获取不成功延时执行
+          if (!winWidth && !docWidth) return setTimeout(function() {
+            loop();
+          }, 100);
+          var _width = !docWidth || (winWidth && winWidth < docWidth) ? winWidth : docWidth; // 兼容部分奇怪的安卓机
+          if (_width > 750) _width = 750;
+          document.documentElement.style.fontSize = (_width / 375 * 40) + 'px';
+          scope.addEventListener(eventName, function(){
+            clearTimeout(scope.orientationChangedTimeout);
+            scope.orientationChangedTimeout = setTimeout(function(){
+              document.documentElement.style.fontSize = (_width / 375 * 40) + 'px';
+            }, howLong);
+          }, false);
+        };
+        loop();
+      }(window));</script></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script src="./main.js?dbc5072371a5b28e931f"></script></body></html>

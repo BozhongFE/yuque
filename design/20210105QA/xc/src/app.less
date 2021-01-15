@@ -1,0 +1,38 @@
+@import '~src/assets/less/unit.less';
+@import '~src/assets/less/fn.less';
+
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #131313;
+  color: @color;
+  outline: none;
+  // overflow-y: scroll;
+  font-family: Arial, Helvetica, sans-serif;
+  &.fixed {
+    position: fixed;
+    overflow: hidden;
+    // pointer-events: none;
+  }
+}
+
+.App {
+  width: 100%;
+  max-width: 750px;
+  min-height: 100%;
+  margin: 0 auto;
+  font-size: 14*@unit;
+  line-height: 20*@unit;
+  -webkit-tap-highlight-color: transparent
+}
+.highlight {
+  color: @colorPrimary;
+}
+.hide {
+  display: none;
+}
+::-webkit-scrollbar {
+  position: absolute;
+  right: 0;
+}
